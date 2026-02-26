@@ -1,0 +1,82 @@
+{
+  "title": "Wan2.2 Image to Video",
+  "description": "Generate high-quality videos from a single image using Wan-AI/Wan2.2-I2V-A14B (27B MoE, 14B active). Supports 480P and 720P output with optional text-prompt guidance.",
+  "type": "serverless",
+  "category": "video",
+  "iconUrl": "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/icon.png",
+
+  "config": {
+    "runsOn": "GPU",
+    "containerDiskInGb": 100,
+    "gpuCount": 1,
+    "gpuIds": "NVIDIA A100 80GB PCIe,NVIDIA A100-SXM4-80GB,NVIDIA H100 80GB HBM3,NVIDIA H100 NVL,NVIDIA H100 PCIe",
+    "allowedCudaVersions": ["12.8", "12.7", "12.6", "12.5", "12.4", "12.3", "12.2", "12.1", "12.0"],
+    "endpointType": "LB",
+
+    "presets": [
+      {
+        "name": "480P — Fast (Recommended)",
+        "defaults": {
+          "RESOLUTION": "480p",
+          "ENABLE_CPU_OFFLOAD": false
+        }
+      },
+      {
+        "name": "720P — High Quality",
+        "defaults": {
+          "RESOLUTION": "720p",
+          "ENABLE_CPU_OFFLOAD": false
+        }
+      },
+      {
+        "name": "480P — Low VRAM (CPU Offload)",
+        "defaults": {
+          "RESOLUTION": "480p",
+          "ENABLE_CPU_OFFLOAD": true
+        }
+      }
+    ],
+
+    "env": [
+      {
+        "key": "MODEL_ID",
+        "value": "Wan-AI/Wan2.2-I2V-A14B-Diffusers"
+      },
+      {
+        "key": "RESOLUTION",
+        "input": {
+          "name": "Default Resolution",
+          "type": "string",
+          "description": "Default output resolution. Individual requests can override this via the 'resolution' input field.",
+          "options": [
+            {"label": "480P — Faster, ~40GB VRAM", "value": "480p"},
+            {"label": "720P — Higher quality, ~80GB VRAM", "value": "720p"}
+          ],
+          "default": "480p"
+        }
+      },
+      {
+        "key": "ENABLE_CPU_OFFLOAD",
+        "input": {
+          "type": "boolean",
+          "name": "Enable CPU Offload",
+          "description": "Offload model layers to CPU RAM to lower peak GPU VRAM usage. Slower throughput but enables GPUs with less than 80GB VRAM.",
+          "default": false,
+          "trueValue": "true",
+          "falseValue": "false",
+          "advanced": true
+        }
+      },
+      {
+        "key": "HF_TOKEN",
+        "input": {
+          "name": "HuggingFace Token",
+          "type": "string",
+          "description": "HuggingFace access token. Required only if using private or gated models.",
+          "default": "",
+          "advanced": true
+        }
+      }
+    ]
+  }
+}

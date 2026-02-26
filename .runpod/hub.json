@@ -3,7 +3,7 @@
   "description": "Generate high-quality videos from a single image using Wan-AI/Wan2.2-I2V-A14B (27B MoE, 14B active). Supports 480P and 720P output with optional text-prompt guidance.",
   "type": "serverless",
   "category": "video",
-  "iconUrl": "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/icon.png",
+  "iconUrl": "https://raw.githubusercontent.com/mindoorio-hue/wan2.2-i2v-runpod/main/icon.png",
 
   "config": {
     "runsOn": "GPU",

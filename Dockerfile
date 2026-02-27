@@ -1,6 +1,6 @@
 # ── Base image ──────────────────────────────────────────────────────────────
-# PyTorch 2.5 + CUDA 12.4 + Python 3.11 on Ubuntu 22.04 (RunPod official)
-FROM runpod/pytorch:2.5.1-py3.11-cuda12.4.1-devel-ubuntu22.04
+# PyTorch 2.6.0 + CUDA 12.8.1 + Ubuntu 22.04 (RunPod official)
+FROM runpod/pytorch:1.0.3-cu1281-torch260-ubuntu2204
 
 WORKDIR /app
 

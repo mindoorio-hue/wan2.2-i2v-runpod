@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir \
         "accelerate>=1.0.0" \
         "huggingface_hub>=0.24.0" \
         "sentencepiece" \
+        "ftfy" \
         "pillow" \
         "numpy"
 

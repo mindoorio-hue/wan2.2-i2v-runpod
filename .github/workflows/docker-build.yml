@@ -3,12 +3,13 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - Dockerfile.base
-      - .github/workflows/**
+    paths:
+      - handler.py
+      - Dockerfile
   release:
     types: [published]
-  # Re-run automatically once the base image finishes building
+  workflow_dispatch:
+  # Auto-run once the base image finishes building
   workflow_run:
     workflows: ["Build Base Image (with model weights)"]
     types: [completed]

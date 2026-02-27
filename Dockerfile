@@ -24,11 +24,18 @@ RUN pip install --no-cache-dir \
         "pillow" \
         "numpy"
 
-# Use hf-transfer for fast parallel model downloads at runtime
+# Use hf-transfer for fast parallel model downloads at build time
 ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # flash-attn for faster attention (requires CUDA dev headers from the base image)
 RUN pip install --no-cache-dir flash-attn --no-build-isolation
+
+# ── Pre-download model weights ───────────────────────────────────────────────
+# Bake the model into the image so workers start instantly with no cold download.
+# from_pretrained() finds it automatically via the HuggingFace local cache.
+RUN python -c "\
+from huggingface_hub import snapshot_download; \
+snapshot_download('Wan-AI/Wan2.2-I2V-A14B-Diffusers')"
 
 # ── Application code ─────────────────────────────────────────────────────────
 COPY handler.py .

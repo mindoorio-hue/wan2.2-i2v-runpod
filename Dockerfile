@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir \
         "hf-transfer" \
         "sentencepiece" \
         "ftfy" \
+        "opencv-python-headless" \
         "pillow" \
         "numpy"
 

@@ -26,11 +26,13 @@ RUN pip install --no-cache-dir \
         "pillow" \
         "numpy"
 
-# Use hf-transfer for fast parallel model downloads
+# hf-transfer is active at runtime for fast user-triggered downloads.
+# Disabled during the Docker build step: its aggressive parallel buffering
+# exhausts the 7 GB RAM on GitHub Actions runners (ResourceExhausted OOM).
 ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # ── Pre-download model weights ───────────────────────────────────────────────
 # Stored in the default HF cache; from_pretrained() finds it automatically.
-RUN python -c "\
+RUN HF_HUB_ENABLE_HF_TRANSFER=0 python -c "\
 from huggingface_hub import snapshot_download; \
 snapshot_download('Wan-AI/Wan2.2-I2V-A14B-Diffusers')"

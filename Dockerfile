@@ -17,10 +17,14 @@ RUN pip install --no-cache-dir \
         "transformers>=4.46.0" \
         "accelerate>=1.0.0" \
         "huggingface_hub>=0.24.0" \
+        "hf-transfer" \
         "sentencepiece" \
         "ftfy" \
         "pillow" \
         "numpy"
+
+# Use hf-transfer for fast parallel model downloads at runtime
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # flash-attn for faster attention (requires CUDA dev headers from the base image)
 RUN pip install --no-cache-dir flash-attn --no-build-isolation

@@ -1,0 +1,36 @@
+# ── Base image with model weights baked in ───────────────────────────────────
+# This image is built once via GitHub Actions (workflow_dispatch) and pushed
+# to GHCR. The main Dockerfile inherits from it so RunPod's 30-minute build
+# limit is never hit — RunPod only adds the handler code on top.
+FROM runpod/pytorch:1.0.3-cu1281-torch260-ubuntu2204
+
+WORKDIR /app
+
+# ── System dependencies ──────────────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Python dependencies ──────────────────────────────────────────────────────
+RUN pip install --no-cache-dir \
+        "runpod>=1.7.0" \
+        "diffusers>=0.32.0" \
+        "transformers>=4.46.0" \
+        "accelerate>=1.0.0" \
+        "huggingface_hub>=0.24.0" \
+        "hf-transfer" \
+        "sentencepiece" \
+        "ftfy" \
+        "opencv-python-headless" \
+        "pillow" \
+        "numpy"
+
+# Use hf-transfer for fast parallel model downloads
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
+
+# ── Pre-download model weights ───────────────────────────────────────────────
+# Stored in the default HF cache; from_pretrained() finds it automatically.
+RUN python -c "\
+from huggingface_hub import snapshot_download; \
+snapshot_download('Wan-AI/Wan2.2-I2V-A14B-Diffusers')"

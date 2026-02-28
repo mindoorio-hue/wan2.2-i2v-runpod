@@ -27,13 +27,13 @@ RUN pip install --no-cache-dir \
 ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
 # ── Pre-download model weights ───────────────────────────────────────────────
-# Disable hf-transfer for this step: its aggressive parallel buffering
-# OOMs on memory-constrained build environments (GHA: 7 GB RAM).
-# max_workers=1 streams one file at a time — minimal memory, still fast
-# on data-center connections (28 GB @ 500 Mbps ≈ 7 min).
-RUN HF_HUB_ENABLE_HF_TRANSFER=0 python -c "\
+# HF_TRANSFER build-arg lets each build environment opt in/out:
+#   RunPod build servers (lots of RAM, fast CDN) → HF_TRANSFER=1 (default)
+#   GitHub Actions (7 GB RAM)                    → HF_TRANSFER=0 via --build-arg
+ARG HF_TRANSFER=1
+RUN HF_HUB_ENABLE_HF_TRANSFER=${HF_TRANSFER} python -c "\
 from huggingface_hub import snapshot_download; \
-snapshot_download('Wan-AI/Wan2.2-I2V-A14B-Diffusers', max_workers=1)"
+snapshot_download('Wan-AI/Wan2.2-I2V-A14B-Diffusers')"
 
 # ── Application code ─────────────────────────────────────────────────────────
 COPY handler.py .
